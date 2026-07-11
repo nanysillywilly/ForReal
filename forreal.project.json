@@ -1,0 +1,37 @@
+{
+  "name": "ForNaoReal",
+  "servePlaceIds": [98086716463239],
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Modules": {
+        "$path": "src/shared",
+        "Controllers": {
+          "$path": "src/client/Controllers"
+        }
+      },
+      "Packages": {
+        "$path": "Packages"
+      }
+    },
+
+    "ServerScriptService": {
+      "Services": {
+        "$path": "src/server/Services"
+      },
+      "ServerPackages": {
+        "$path": "ServerPackages"
+      }
+    },
+
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": {
+          "$path": "src/client/Client"
+        }
+      }
+    }
+  }
+}
