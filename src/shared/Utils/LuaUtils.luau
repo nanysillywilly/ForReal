@@ -57,4 +57,15 @@ function LuaUtils:CollectArgs(table, args)
 	end
 end
 
+function LuaUtils:deepCopy(original)
+	local copy = {}
+	for k, v in pairs(original) do
+		if type(v) == "table" then
+			v = LuaUtils:deepCopy(v)
+		end
+		copy[k] = v
+	end
+	return copy
+end
+
 return LuaUtils

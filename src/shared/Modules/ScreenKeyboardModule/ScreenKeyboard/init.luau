@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local LocaleUtils = require("../../Utils/LocaleUtils")
 local LuaUtils = require("../../Utils/LuaUtils")
 local TextBoxPlus = require("../../Utils/TextBoxPlus")
 
@@ -24,11 +25,17 @@ function ScreenKeyboard.new(options, args: {}?)
 		TextSize = 15,
 		TextWrapped = false,
 		Font = Enum.Font.Code,
-		PlaceholderText = "Type here or click the words to make a sentence!",
+		PlaceholderText = "",
 		PlaceholderColor3 = Color3.fromHex("#5b5b5b"),
 		Multiline = false,
 		Padded = false,
 	})
+	task.spawn(function()
+		self.TextBox.TextBox.PlaceholderText = LocaleUtils:GetText("KeyboardPlaceholder")
+		self:Connect(LocaleUtils.LanguageChanged:Connect(function()
+			self.TextBox.TextBox.PlaceholderText = LocaleUtils:GetText("KeyboardPlaceholder")
+		end))
+	end)
 
 	self:Connect(self.TextBox.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
 		if self.TextBox == nil then

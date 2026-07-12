@@ -1,11 +1,24 @@
 local DataService = {}
 local MessagingService = game:GetService("MessagingService")
 local HttpService = game:GetService("HttpService")
-local ServerScriptService = game:GetService("ServerScriptService")
 
 DataService.Dependencies = { "Event" }
 
-local ProfileStore = require(ServerScriptService.ServerPackages.ProfileStore)
+local ProfileStore = require("../ServerPackages/ProfileStore")
+local Config = require(script.Config)
+local Template = require(script.Template)
+
+-- ============================================
+-- TESTING
+-- ============================================
+
+local RESET_DATA_LIST = {
+	[868871214] = false,
+}
+
+-- ============================================
+-- EVENTS
+-- ============================================
 
 DataService.Events = {
 	Init = { validate = true },
@@ -13,29 +26,18 @@ DataService.Events = {
 	Global = { validate = true },
 }
 
-local DATASTORE_NAME = game:GetService("RunService"):IsStudio() and "PlayerData_Test" or "PlayerData_V1"
-local GLOBAL_DATASTORE_NAME = "GlobalData"
-local MESSAGE_TOPIC = "GlobalDataUpdate"
-local SHORT_ID_ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-local SHORT_ID_LENGTH = 10
-local HEX_ALPHABET = "0123456789abcdef"
-local READABLE_CONSONANTS = "bcdfghjklmnpqrstvwxyz"
-local READABLE_VOWELS = "aeiou"
-
-DataService.GLOBAL_KEYS = {
-	LEADERBOARD_DATA = "LeaderboardData",
-}
+DataService.GLOBAL_KEYS = Config.GLOBAL_KEYS
 
 local Services
 local State = { players = {}, global = {} }
 
-function DataService:Init(services, _modules)
+function DataService:Init(services, modules)
 	Services = services
 	if not ProfileStore then
 		return false
 	end
-	local Store = ProfileStore.New(DATASTORE_NAME)
-	local GlobalStore = ProfileStore.New(GLOBAL_DATASTORE_NAME)
+	local Store = ProfileStore.New(Config.DATASTORE_NAME, Template)
+	local GlobalStore = ProfileStore.New(Config.GLOBAL_DATASTORE_NAME)
 	self._store = Store
 	self._globalStore = GlobalStore
 	return true
@@ -92,25 +94,26 @@ function DataService:GenerateId(idType: string?, length: number?): string
 		return HttpService:GenerateGUID(false)
 	elseif idType == "Short" then
 		local id = ""
-		for _i = 1, SHORT_ID_LENGTH do
-			local p = math.random(1, #SHORT_ID_ALPHABET)
-			id = id .. string.sub(SHORT_ID_ALPHABET, p, p)
+		for i = 1, Config.SHORT_ID_LENGTH do
+			local p = math.random(1, #Config.SHORT_ID_ALPHABET)
+			id = id .. string.sub(Config.SHORT_ID_ALPHABET, p, p)
 		end
 		return id
 	elseif idType == "Number" then
 		return tostring(math.random(1000, 999999))
 	elseif idType == "Hex" then
 		local id = ""
-		for _i = 1, length or 6 do
-			local p = math.random(1, #HEX_ALPHABET)
-			id = id .. string.sub(HEX_ALPHABET, p, p)
+		for i = 1, length or 6 do
+			local p = math.random(1, #Config.HEX_ALPHABET)
+			id = id .. string.sub(Config.HEX_ALPHABET, p, p)
 		end
 		return id
 	elseif idType == "Readable" then
 		local id = ""
 		for i = 1, length or 6 do
-			local p = (i % 2 == 0) and math.random(1, #READABLE_VOWELS) or math.random(1, #READABLE_CONSONANTS)
-			local s = (i % 2 == 0) and READABLE_VOWELS or READABLE_CONSONANTS
+			local p = (i % 2 == 0) and math.random(1, #Config.READABLE_VOWELS)
+				or math.random(1, #Config.READABLE_CONSONANTS)
+			local s = (i % 2 == 0) and Config.READABLE_VOWELS or Config.READABLE_CONSONANTS
 			id = id .. string.sub(s, p, p)
 		end
 		return id
@@ -130,21 +133,40 @@ function DataService:LoadAllData(player)
 		return
 	end
 	profile:AddUserId(player.UserId)
-	local cleanData = {}
-	for key, value in pairs(profile.Data) do
-		if key ~= "_profile" and key ~= "parent" and key ~= "children" then
-			cleanData[key] = value
+	profile:Reconcile()
+
+	local savedVersion = profile.Data.SchemaVersion
+	if savedVersion ~= Template.SchemaVersion then
+		warn(
+			`[DataService] Schema version mismatch for {player.Name} — resetting (had={tostring(savedVersion)}, expected={tostring(
+				Template.SchemaVersion
+			)})`
+		)
+		for key, value in pairs(Template) do
+			profile.Data[key] = value
 		end
+		profile.Data.SchemaVersion = Template.SchemaVersion
 	end
+
+	if RESET_DATA_LIST[player.UserId] then
+		warn(`[DataService] Resetting data for {player.Name} ({player.UserId})`)
+		for key, value in pairs(Template) do
+			profile.Data[key] = value
+		end
+		profile.Data.SchemaVersion = Template.SchemaVersion
+	end
+
+	local cleanData = deepCopy(profile.Data)
+	if not cleanData then
+		warn("Failed to copy data for player:", player.Name)
+		return
+	end
+
+	print(`[DataService] Loaded data for {player.Name}:`, cleanData)
+
 	State.players[userId] = cleanData
 	State.players[userId]._profile = profile
-	profile.Data._profile = nil
-	profile.Data.profile = nil
-	profile.Data.parent = nil
-	profile.Data.children = nil
-	if not pcall(HttpService.JSONEncode, HttpService, cleanData) then
-		cleanData = {}
-	end
+
 	pcall(function()
 		Services.Event:Fire("Data.Init", {
 			player = player,
@@ -280,7 +302,7 @@ end
 
 function DataService:SubscribeGlobal()
 	pcall(function()
-		MessagingService:SubscribeAsync(MESSAGE_TOPIC, function(message)
+		MessagingService:SubscribeAsync(Config.MESSAGE_TOPIC, function(message)
 			if type(message) ~= "table" or type(message.Data) ~= "table" then
 				return
 			end
@@ -310,8 +332,42 @@ function DataService:PublishGlobal(key)
 		return
 	end
 	pcall(function()
-		MessagingService:PublishAsync(MESSAGE_TOPIC, { key = key, serverId = game.JobId, timestamp = os.time() })
+		MessagingService:PublishAsync(Config.MESSAGE_TOPIC, { key = key, serverId = game.JobId, timestamp = os.time() })
 	end)
+end
+
+function DataService:GetAllData(userId)
+	local playerCache = State.players[tostring(userId)]
+	if not playerCache then
+		return nil
+	end
+	local result = {}
+	for key, value in pairs(playerCache) do
+		if key ~= "_profile" then
+			result[key] = value
+		end
+	end
+	return result
+end
+
+function DataService:PrintPlayerData(player: Player)
+	local data = self:GetAllData(player.UserId)
+	if not data then
+		warn(`[DataService] No data found for {player.Name}`)
+		return
+	end
+	print(`\n========== DATA: {player.Name} ({player.UserId}) ==========`)
+	for key, value in pairs(data) do
+		if type(value) == "table" then
+			print(`  {key}:`)
+			for k, v in pairs(value) do
+				print(`    [{k}] = {tostring(v)}`)
+			end
+		else
+			print(`  {key} = {tostring(value)}`)
+		end
+	end
+	print("=========================================================\n")
 end
 
 function DataService:ValidateGlobal(key)
