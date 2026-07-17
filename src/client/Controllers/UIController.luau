@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Signal = require("../../Packages/Signal")
-local Language = require("../Modules/Language")
+local Languages = require("../Modules/Language")
 local LazyLoader = require("../Utils/GuiLib/LazyLoader")
 local LocaleUtils = require("../Utils/LocaleUtils")
 local LuaUtils = require("../Utils/LuaUtils")
@@ -40,11 +40,18 @@ function UIController:BuildUI()
 	local settingsFrame = self.GUI.SettingsPanel
 	local optionsFrame = settingsFrame.OptionsFrame
 	local templateOptionFrame = optionsFrame.OptionFrame
+	local settingsButton:TextButton = self.GUI.SettingsButton
 
 	templateOptionFrame.Visible = false
+	settingsFrame.Visible = false
+
+	settingsButton.MouseButton1Click:Connect(function()
+		settingsFrame.Visible = not settingsFrame.Visible
+	end)
 
 	local languageList = {}
-	for nome, _ in Language do
+
+	for nome, _ in Languages do
 		table.insert(languageList, nome)
 	end
 
@@ -74,10 +81,13 @@ function UIController:BuildUI()
 				dropdown.Button.Parent = optionValueFrame
 				dropdown.Button.Size = UDim2.fromScale(1, 1)
 				self.OnSettingsChanged:Connect(function()
-					dropdown:SetOptionByString(self.CurrentSave[option.ID])
+					local ogLanguage = self.CurrentSave[option.ID]
+					dropdown:SetOptionByString(LocaleUtils:GetNameByCodeID(ogLanguage))
 				end)
+
 				dropdown.Changed:Connect(function()
-					self:ChangeSetting(option.ID, dropdown:GetText())
+					local selectedLanguage = dropdown:GetText()
+					self:ChangeSetting(option.ID, Languages[selectedLanguage].CodeID)
 				end)
 			end)
 			.case("Checkbox", function()

@@ -30,12 +30,11 @@ function ScreenKeyboard.new(options, args: {}?)
 		Multiline = false,
 		Padded = false,
 	})
-	task.spawn(function()
-		self.TextBox.TextBox.PlaceholderText = LocaleUtils:GetText("KeyboardPlaceholder")
-		self:Connect(LocaleUtils.LanguageChanged:Connect(function()
-			self.TextBox.TextBox.PlaceholderText = LocaleUtils:GetText("KeyboardPlaceholder")
-		end))
-	end)
+
+	self.TextBox.TextBox.PlaceholderText = LocaleUtils:GetText("KeyboardTutorialMessage")
+	self:Connect(LocaleUtils.LanguageChanged:Connect(function()
+		self.TextBox.TextBox.PlaceholderText = LocaleUtils:GetText("KeyboardTutorialMessage")
+	end))
 
 	self:Connect(self.TextBox.TextBox:GetPropertyChangedSignal("Text"):Connect(function()
 		if self.TextBox == nil then

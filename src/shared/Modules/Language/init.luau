@@ -1,49 +1,73 @@
 Languages = {
-    ["en-us"] = {
-        Name = "American English",
-        CommonTongue = "US English"
+    ["American English"] = {
+        Name = "US English",
+        CodeID = "en-us",
     },
 
-    ["pt-br"] = {
-        Name = "Português Brasileiro",
-        CommonTongue = "Brazilian Portuguese"
+    ["British English"] = {
+        Name = "British English",
+        CodeID = "en-gb",
     },
 
-    ["ar-001"] = {
-        Name = "العربية",
-        CommonTongue = "Arabic"
+    ["Português Brasileiro"] = {
+        Name = "Brazilian Portuguese",
+        CodeID = "pt-br",
     },
 
-    ["ja-jp"] = {
-        Name = "日本語",
-        CommonTongue = "Japanese"
+    ["Português de Portugal"] = {
+        Name = "Portuguese Portuguese",
+        CodeID = "pt-pt",
     },
 
-    ["es-es"] = {
-        Name = "Español - España",
-        CommonTongue = "Spanish - Spain"
+    ["العربية"] = {
+        Name = "Arabic",
+        CodeID = "ar-001",
     },
 
-    ["ru-ru"] = {
-        Name = "русский",
-        CommonTongue = "Russian"
+    ["Español - España"] = {
+        Name = "Spanish - Spain",
+        CodeID = "es-es",
     },
 
-    ["zh-cn"] = {
-        Name = "中文(简体",
-        CommonTongue = "Simplified Chinese"
+    ["Español - México"] = {
+        Name = "Spanish - Mexico",
+        CodeID = "es-mx",
     },
 
-    ["fr-fr"] = {
-        Name = "Français - France",
-        CommonTongue = "French"
+    ["日本語"] = {
+        Name = "Japanese",
+        CodeID = "ja=jp",
     },
 
-    ["de-de"] = {
-        Name = "Deutsch",
-        CommonTongue = "German"
-    }
+    ["русский"] = {
+        Name = "Russian",
+        CodeID = "ru-ru",
+    },
 
+    ["中文(简体)"] = {
+        Name = "Chinese (Simplified)",
+        CodeID = "zh-cn",
+    },
+
+    ["中文(繁體)"] = {
+        Name = "Chinese (Traditional)",
+        CodeID = "zh-tw",
+    },
+
+    ["Français - France"] = {
+        Name = "French - France",
+        CodeID = "fr-fr",
+    },
+
+    ["Français - Canada"] = {
+        Name = "French - Canada",
+        CodeID = "fr-ca",
+    },
+
+    ["Deutsch"] = {
+        Name = "German",
+        CodeID = "de-de",
+    },
 }
 
 return Languages
