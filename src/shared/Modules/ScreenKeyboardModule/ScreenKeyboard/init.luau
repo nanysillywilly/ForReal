@@ -49,8 +49,10 @@ function ScreenKeyboard.new(options, args: {}?)
 		end
 
 		local words = string.split(textBox.Text, " ")
+		
 		if words[1] ~= " " and words[1] ~= "" then
-			local wordInstance = self.WordInstances[words[1]]
+			local wordLower = words[1]:lower():gsub("'", "")
+			local wordInstance = self.WordInstances[wordLower]
 			if wordInstance then
 				if wordInstance.CURRENT_STATE.Name ~= "WordPhrased" then
 					wordInstance:ChangeState("WordPhrased")

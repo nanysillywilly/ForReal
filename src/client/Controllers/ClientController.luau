@@ -1,4 +1,4 @@
-local Answering = require("../Answering")
+local DialogueWords = require("../Modules/Language/English/DialogueWords")
 local ClientController = {}
 
 local Controllers
@@ -9,11 +9,11 @@ ClientController.Modules = { "ScreenKeyboard" }
 ClientController.Listeners = {
 	["Client.StartDialogue"] = function(self, _data)
 		local formattedOptions = {}
-		for _, i in Answering.Answering do
-			for _, j in i do
-				table.insert(formattedOptions, j)
-			end
+
+		for _, entry in DialogueWords do
+			table.insert(formattedOptions, entry.word)
 		end
+
 		local _newKeyboard = Modules.ScreenKeyboard.Get().new(formattedOptions)
 		Controllers.Character.CurrentCharacter:ChangeState("CharDialogue")
 	end,

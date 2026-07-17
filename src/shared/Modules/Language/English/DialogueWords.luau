@@ -1,24 +1,65 @@
-DialogueWords = {}
-
-DialogueWords.EnglishWords = {
+DialogueWords = {
 
 	{
 		word = "what",
+		combinedOptions = {
+			"what's",
+			"what'd",
+			"what'll",
+			"what've",
+		},
 	},
 	{
 		word = "can",
+		combinedOptions = {
+			"cannot",
+			"can't",
+		},
 	},
 	{
 		word = "how",
+		combinedOptions = {
+			"how's",
+			"how'd",
+			"how'll",
+			"how've",
+		},
 	},
 	{
 		word = "will",
+		combinedOptions = {
+			"i'll",
+			"you'll",
+			"he'll",
+			"she'll",
+			"it'll",
+			"we'll",
+			"what'll",
+			"how'll",
+			"won't",
+		},
 	},
 	{
 		word = "would",
+		combinedOptions = {
+			"i'd",
+			"you'd",
+			"he'd",
+			"she'd",
+			"it'd",
+			"we'd",
+			"what'd",
+			"how'd",
+			"wouldn't",
+			"would've",
+		},
 	},
 	{
 		word = "should",
+		combinedOptions = {
+			"shouldn't",
+			"should've",
+		},
 	},
 	{
 		word = "do",
@@ -26,11 +67,22 @@ DialogueWords.EnglishWords = {
 			"does",
 			"did",
 			"done",
-			"doing"
-		}
+			"doing",
+		},
+		combinedOptions = {
+			"don't",
+			"doesn't",
+			"didn't",
+			"donno",
+			"ain't",
+		},
 	},
 	{
 		word = "could",
+		combinedOptions = {
+			"couldn't",
+			"could've",
+		},
 	},
 	{
 		word = "you",
@@ -42,6 +94,12 @@ DialogueWords.EnglishWords = {
 			"thy",
 			"thine",
 		},
+		combinedOptions = {
+			"you're",
+			"you'd",
+			"you'll",
+			"you've",
+		},
 	},
 	{
 		word = "i",
@@ -50,11 +108,23 @@ DialogueWords.EnglishWords = {
 			"mine",
 			"my",
 		},
+		combinedOptions = {
+			"i'm",
+			"i'll",
+			"i'd",
+			"i've",
+		},
 	},
 	{
 		word = "it",
 		options = {
 			"its",
+		},
+		combinedOptions = {
+			"it's",
+			"it'd",
+			"it'll",
+			"it've",
 		},
 	},
 	{
@@ -63,6 +133,11 @@ DialogueWords.EnglishWords = {
 			"us",
 			"our",
 			"ours",
+		},
+		combinedOptions = {
+			"we're",
+			"we'd",
+			"we'll",
 		},
 	},
 	{
@@ -73,6 +148,21 @@ DialogueWords.EnglishWords = {
 			"is",
 			"was",
 			"were",
+		},
+		combinedOptions = {
+			"i'm",
+			"you're",
+			"he's",
+			"she's",
+			"it's",
+			"we're",
+			"what's",
+			"how's",
+			"ain't",
+			"isn't",
+			"aren't",
+			"wasn't",
+			"weren't",
 		},
 	},
 	{
@@ -105,6 +195,9 @@ DialogueWords.EnglishWords = {
 			"wants",
 			"wanted",
 			"wanting",
+		},
+		combinedOptions = {
+			"wanna",
 		},
 	},
 	{
@@ -139,8 +232,8 @@ DialogueWords.EnglishWords = {
 			"suggested",
 			"suggesting",
 			"suggestion",
-			"suggestions"
-		}
+			"suggestions",
+		},
 	},
 	{
 		word = "get",
@@ -148,16 +241,26 @@ DialogueWords.EnglishWords = {
 			"gets",
 			"got",
 			"gotten",
-			"getting"
-		}
+			"getting",
+		},
+		combinedOptions = {
+			"gotta",
+		},
 	},
 	{
 		word = "have",
 		options = {
 			"has",
 			"had",
-			"having"
-		}
+			"having",
+		},
+		combinedOptions = {
+			"haven't",
+			"hasn't",
+			"i've",
+			"you've",
+			"ain't",
+		},
 	},
 	{
 		word = "know",
@@ -165,110 +268,134 @@ DialogueWords.EnglishWords = {
 			"knows",
 			"knew",
 			"known",
-			"knowing"
-		}
+			"knowing",
+		},
 	},
 	{
 		word = "like",
 		options = {
 			"likes",
 			"liked",
-			"liking"
-		}
+			"liking",
+		},
 	},
 	{
 		word = "look",
 		options = {
 			"looks",
 			"looked",
-			"looking"
-		}
+			"looking",
+		},
 	},
 	{
 		word = "tell",
 		options = {
 			"tells",
 			"told",
-			"telling"
-		}
+			"telling",
+		},
 	},
 	{
 		word = "need",
 		options = {
 			"needs",
 			"needed",
-			"needing"
-		}
+			"needing",
+		},
 	},
 	{
 		word = "leave",
 		options = {
 			"leaves",
 			"left",
-			"leaving"
-		}
+			"leaving",
+		},
 	},
 	{
-		word = "anything"
+		word = "anything",
 	},
 	{
 		word = "no",
 		options = {
-			"not"
-		}
+			"not",
+			"nope",
+			"ain't",
+			"isn't",
+			"aren't",
+			"wasn't",
+			"weren't",
+			"wouldn't",
+			"couldn't",
+			"shouldn't",
+			"won't",
+		},
 	},
 	{
-		word = "yes"
+		word = "yes",
+		options = {
+			"yeah",
+			"yup",
+		},
 	},
 	{
-		word = "for"
+		word = "for",
 	},
 	{
-		word = "of"
+		word = "of",
+		combinedOptions = {
+			"outta",
+		},
 	},
 	{
-		word = "to"
+		word = "to",
+		combinedOptions = {
+			"gotta",
+			"wanna",
+		},
 	},
 	{
-		word = "out"
+		word = "out",
+		combinedOptions = {
+			"outta",
+		},
 	},
 	{
-		word = "money"
+		word = "money",
 	},
 	{
-		word = "today"
+		word = "today",
 	},
 	{
 		word = "option",
 		options = {
-			"options"
-		}
+			"options",
+		},
 	},
 	{
 		word = "pizza",
 		options = {
-			"pizzas"
-		}
+			"pizzas",
+		},
 	},
 	{
 		word = "taco",
 		options = {
-			"tacos"
-		}
+			"tacos",
+		},
 	},
 	{
 		word = "pastel",
 		options = {
-			"pastels"
-		}
+			"pastels",
+		},
 	},
 	{
 		word = "time",
 		options = {
 			"times",
 			"timed",
-			"timing"
-		}
+			"timing",
+		},
 	},
 }
 

@@ -1,9 +1,19 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local DialogueWords = require("../../Language/English/DialogueWords")
 local ScreenWord = {}
 ScreenWord.__index = ScreenWord
 
 local TEMPLATE_GUI = ReplicatedStorage.TemplateButton
+
+local function FindEntryByWord(palavra: string)
+    for _, entry in DialogueWords do
+        if entry.word == palavra then
+            return entry
+        end
+    end
+    return nil
+end
 
 function ScreenWord.new(text: string, index: number, parent: Frame, Keyboard: { GUI: ScreenGui })
 	local self = setmetatable({}, ScreenWord)
@@ -13,6 +23,8 @@ function ScreenWord.new(text: string, index: number, parent: Frame, Keyboard: { 
 	local b = math.random(0, 255)
 
 	self.index = index
+	self.options = FindEntryByWord(text).options
+	self.combinedOptions = FindEntryByWord(text).combinedOptions
 	local newBt: TextButton = TEMPLATE_GUI:Clone()
 	newBt.Text = text
 	newBt.Name = text
